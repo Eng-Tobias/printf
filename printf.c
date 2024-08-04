@@ -3,53 +3,67 @@
 #include "main.h"
 
 /**
- * _printf - produces output according to a format
- * @format: format string containing the characters and the specifiers
- * Description: this function will call the corresponding function to handle
- * each specifier
- * Return: length of the formatted output string
- */
+*_putchar - writes the character c to stdout
+*@c: The character to print
+*
+*Return: On success 1.
+*On error, -1 is returned, and errno is set appropriately.
+*/
+int _putchar(char c)
+{
+return (write(1, &c, 1));
+}
+
+/**
+*_printf - produces output according to a format
+*@format: character string
+*
+*Return: the number of characters printed
+*/
 int _printf(const char *format, ...)
 {
-    va_list args;
-    int i = 0, count = 0;
+va_list args;
+int count = 0;
 
-    va_start(args, format);
-    while (format && format[i])
-    {
-        if (format[i] == '%')
-        {
-            i++;
-            if (format[i] == 'c')
-            {
-                char c = va_arg(args, int);
-                write(1, &c, 1);
-                count++;
-            }
-            else if (format[i] == 's')
-            {
-                char *s = va_arg(args, char *);
-                while (*s)
-                {
-                    write(1, s, 1);
-                    s++;
-                    count++;
-                }
-            }
-            else if (format[i] == '%')
-            {
-                write(1, "%", 1);
-                count++;
-            }
-        }
-        else
-        {
-            write(1, &format[i], 1);
-            count++;
-        }
-        i++;
-    }
-    va_end(args);
-    return (count);
+va_start(args, format);
+
+while (*format)
+{
+if (*format == '%')
+{
+format++;
+if (*format == 'c')
+{
+char c = va_arg(args, int);
+count += _putchar(c);
+}
+else if (*format == 's')
+{
+char *s = va_arg(args, char *);
+while (*s)
+{
+count += _putchar(*s);
+s++;
+}
+}
+else if (*format == '%')
+{
+count += _putchar('%');
+}
+else
+{
+count += _putchar('%');
+count += _putchar(*format);
+}
+}
+else
+{
+count += _putchar(*format);
+}
+format++;
+}
+
+va_end(args);
+return (count);
 }
 
